@@ -1,6 +1,6 @@
 from django.http.response import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
-from django.http import HttpResponse, request
+from django.http import HttpResponse, request, Http404
 from django.urls import reverse
 from django.template.loader import render_to_string
 
@@ -16,7 +16,8 @@ monthly_challenges = {
     "september": "This is september.",
     "october": "This is october.",
     "november": "This is november.",
-    "december": "This is december.",
+    "december": None,
+    # "december": "This is december.",
 
 }
 
@@ -58,7 +59,9 @@ def monthly_activities(request, month):
         challenge = monthly_challenges[month]
         return render(request, "challenges/challenge.html", {"month_name": month, "challenge_name": challenge}) # DTL: Django Template Language
     except:
-        return HttpResponseNotFound("<h1>This month is not supported.</h1>")
+        # raise Http404()
+        response_data = render_to_string("404.html")
+        return HttpResponseNotFound(response_data)
 
 def monthly_activities_by_number(request, month): # 1
     months = list(monthly_challenges.keys()) 
